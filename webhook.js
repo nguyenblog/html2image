@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const fs = require('fs');
 const puppeteer = require('puppeteer');
@@ -22,7 +23,10 @@ app.post('/convert', async (req, res) => {
     const imageFormat = (format === 'jpeg') ? 'jpeg' : 'png';
     let browser;
     try {
-        browser = await puppeteer.launch();
+        browser = await puppeteer.launch({
+            headless: 'new',
+            executablePath: process.env.CHROME_PATH
+        });
         const page = await browser.newPage();
         await page.setContent(html, { waitUntil: 'networkidle0' });
         const imageBuffer = await page.screenshot({
